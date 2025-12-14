@@ -1,0 +1,26 @@
+bankdata=read.csv("/Users/sakshisingh/Downloads/bankloan_sol_data.csv")
+dim(bankdata)
+str(bankdata)
+bankdata$IsDefaulted=as.factor((bankdata$IsDefaulted))
+str(bankdata)
+set.seed(100)
+sample(1:10,5)
+recnos=sample(1:700,560)
+traindata=bankdata[recnos,]
+testdata=bankdata[-recnos,]
+dim(traindata)
+dim(testdata)
+install.packages("e1071")
+library(e1071)
+nbmodel=naiveBayes(IsDefaulted~.,traindata)
+traindata_preds=predict(nbmodel, traindata)
+traindata$IsDefaulted==traindata_preds
+sum(traindata$IsDefaulted==traindata_preds)
+sum(traindata$IsDefaulted==traindata_preds)/560
+testdata_preds=predict(nbmodel,testdata)
+sum(testdata$IsDefaulted==testdata_preds)
+sum(testdata$IsDefaulted==testdata_preds)/140
+install.packages("Rweka")
+library(randomForest)
+library(Rweka)
+nbmodel=randomforest(IsDefaulted~.,traindata)
